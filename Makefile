@@ -10,7 +10,17 @@ stop:
 	docker-compose stop
 
 logs:
-	docker-compose logs --tail=500 --follow $(docker-service-name)
+	docker-compose logs --tail=500 --follow $(docker_service_name)
 
 test:
-	docker-compose exec $(docker-service-name) python manage.py test chat
+	docker-compose exec $(docker_service_name) python manage.py test chat
+
+make-migrations:
+	docker-compose exec $(docker_service_name) python manage.py makemigrations
+
+migrate:
+	docker-compose exec $(docker_service_name) python manage.py migrate
+
+shell:
+	docker-compose exec $(docker_service_name) sh
+
