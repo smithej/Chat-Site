@@ -21,6 +21,9 @@ make-migrations:
 migrate:
 	docker-compose exec $(docker_service_name) python manage.py migrate
 
+django-shell:
+	docker-compose exec $(docker_service_name) python manage.py shell
+
 shell:
 	docker-compose exec $(docker_service_name) sh
 

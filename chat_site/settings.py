@@ -26,7 +26,9 @@ SECRET_KEY = '$ya+5=mb-(m_6kao-8fzk)&dx0uzz(yf2(gh_#d#2b@yx!309k'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '0.0.0.0'
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
 ]
 
 
@@ -78,11 +80,10 @@ WSGI_APPLICATION = 'chat_site.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #
-    # }
+    'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 
@@ -126,3 +127,12 @@ STATIC_URL = '/static/'
 
 # Channels
 ASGI_APPLICATION = 'chat_site.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # TODO: Pull the redis server name out into an environment variable.
+            "hosts": [('chat_site_redis_1', 6379)],
+        },
+    },
+}
