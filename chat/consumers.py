@@ -1,11 +1,10 @@
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
 
-class ChatConsumer(WebsocketConsumer):
+class ChatConsumer(AsyncWebsocketConsumer):
     """
-    This is a synchronous WebSocket consumer that accepts all connections, receives messages from its client,
+    This is an asynchronous WebSocket consumer that accepts all connections, receives messages from its client,
     and broadcasts messages to other clients in the same room.
     """
 
@@ -26,16 +25,14 @@ class ChatConsumer(WebsocketConsumer):
         """
         self.room_group_name = 'chat_%s' % self.room_name
 
-    def connect(self):
+    async def connect(self):
         """
         Joins a group.
-        The async_to_sync(…) wrapper is required because ChatConsumer is a synchronous WebsocketConsumer but it is
-        calling an asynchronous channel layer method. (All channel layer methods are asynchronous.)
         Group names are restricted to ASCII alphanumerics, hyphens, and periods only. Since this code constructs a
         group name directly from the room name, it will fail if the room name contains any characters that are not
         valid in a group name.
         """
-        async_to_sync(self.channel_layer.group_add)(
+        await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
@@ -46,18 +43,18 @@ class ChatConsumer(WebsocketConsumer):
         
         Note: This should be the last call in the connect() method.
         """
-        self.accept()
+        await self.accept()
 
-    def disconnect(self, code):
+    async def disconnect(self, code):
         """
         Leaves a group.
         """
-        async_to_sync(self.channel_layer.group_discard)(
+        await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name,
         )
 
-    def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data=None, bytes_data=None):
         """
         Sends an event to a group.
         An event has a special 'type' key corresponding to the name of the method that should be invoked on consumers
@@ -66,7 +63,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        async_to_sync(self.channel_layer.group_send)(
+        await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
@@ -74,13 +71,13 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
 
-    def chat_message(self, event):
+    async def chat_message(self, event):
         """
         Method to be invoked on consumers of event type 'chat_message'.
         Relay the message contained in the event back to the client via WebSocket.
         """
         message = event['message']
 
-        self.send(text_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'message': message
         }))
