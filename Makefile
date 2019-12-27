@@ -9,6 +9,9 @@ run:
 stop:
 	docker-compose stop
 
+restart:
+	docker-compose restart
+
 logs:
 	docker-compose logs --tail=500 --follow $(service_name)
 
@@ -24,6 +27,6 @@ migrate:
 django-shell:
 	docker-compose exec $(service_name) python manage.py shell
 
-shell:
-	docker-compose exec $(service_name) sh
+bash:
+	docker-compose exec $(service_name) /bin/bash
 

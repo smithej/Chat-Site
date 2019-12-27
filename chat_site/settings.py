@@ -132,7 +132,7 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             # TODO: Pull the redis server name out into an environment variable.
-            "hosts": [('chat_site_redis_1', 6379)],
+            "hosts": [('chat-site_redis_1', 6379)],
         },
     },
 }
