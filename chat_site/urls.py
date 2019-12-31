@@ -16,9 +16,17 @@ Including another URLconf
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import RedirectView
+
+from chat.views import SignUpView
 
 urlpatterns = [
     path('chat/', include('chat.urls')),
     path('', include('django.contrib.auth.urls')),
+
+    # Redirect root to /chat/
+    path('', RedirectView.as_view(url='chat/')),
+
+    path('signup/', SignUpView.as_view()),
     path('admin/', admin.site.urls),
 ]

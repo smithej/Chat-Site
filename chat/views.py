@@ -1,7 +1,19 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
+from django.views.generic import CreateView
+
 import json
+
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
+
 
 # TODO: Move to class based views. When using class based views use the LoginRequiredMixin.
 
