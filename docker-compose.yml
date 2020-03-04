@@ -1,4 +1,9 @@
-version: '3'
+version: '3.4'
+
+
+x-api-variables: &api-variables
+  REDIS_SERVER: 'chat_site_redis_1'
+  REDIS_PORT: 6379
 
 services:
   api:
@@ -8,5 +13,7 @@ services:
       - .:/code
     ports:
       - "8800:8800"
+    environment:
+      <<: *api-variables
   redis:
     image: "redis:alpine"

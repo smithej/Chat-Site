@@ -8,7 +8,6 @@ from django.views.generic import CreateView
 import json
 
 
-
 class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
@@ -20,6 +19,7 @@ class SignUpView(CreateView):
 @login_required
 def index(request):
     return render(request, 'chat/index.html', {})
+
 
 @login_required
 def room(request, room_name):

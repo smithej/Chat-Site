@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+env = environ.Env(
+    DEBUG=(bool, False),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -135,8 +139,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # TODO: Pull the redis server name out into an environment variable.
-            "hosts": [('chat-site_redis_1', 6379)],
+            "hosts": [(env.str('REDIS_SERVER'), env.str('REDIS_PORT'))],
         },
     },
 }
